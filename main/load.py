@@ -36,16 +36,6 @@ def ing_loader(file_path):
     """
     # Load and preprocess data
     df = pd.read_csv(file_path, sep=";")
-    df = df[
-        [
-            "Date",
-            "Name / Description",
-            "Account",
-            "Amount (EUR)",
-            "Transaction type",
-            "Notifications",
-        ]
-    ]
 
     # Rename columns for consistency and clarity
     df = df.rename(
@@ -59,6 +49,11 @@ def ing_loader(file_path):
         }
     )
 
+    # Select relevant columns
+    df = df[
+        ["date", "account_name", "account_number", "amount", "category", "description"]
+    ]
+
     # Convert date and amount columns
     df["date"] = pd.to_datetime(df["date"], format="%Y%m%d")
     df["amount"] = pd.to_numeric(df["amount"].str.replace(",", "."))
@@ -66,7 +61,7 @@ def ing_loader(file_path):
     # Filter transactions
     df = df[~df["category"].isin(["Batch payment", "Deposit", "Transfer"])]
     mask = (df["category"] == "Online Banking") & (
-        df["extra"].str.contains("Oranje spaarrekening", case=False, na=False)
+        df["description"].str.contains("Oranje spaarrekening", case=False, na=False)
     )
     df = df[~mask]
 
