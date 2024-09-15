@@ -1,0 +1,10 @@
+House payments
+Utilities
+Food
+Transport
+Health
+Subscriptions
+Insurance
+Entertainment
+Other
+Unknown

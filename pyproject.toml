@@ -14,14 +14,13 @@ matplotlib = "^3.9.2"
 seaborn = "^0.13.2"
 transformers = "^4.44.2"
 pandas = "^2.2.2"
+torch = {version = "^2.4.0+cu121", source = "pytorch-gpu-src"}
 
-[tool.black]
-line-length = 100
-extend-exclude = '/^[^.]+$|\.(?!(py)$)([^.]+$)/'
 
-[tool.isort]
-profile = "black"
-line_length = 100
+[[tool.poetry.source]]
+name = "pytorch-gpu-src"
+url = "https://download.pytorch.org/whl/cu118"
+priority = "explicit"
 
 [build-system]
 requires = ["poetry-core"]

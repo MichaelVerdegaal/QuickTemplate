@@ -1,62 +1,35 @@
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
+import json
 
-# Load datai
-df = pd.read_csv("data/NL38INGB0001546874_01-01-2024_18-08-2024.csv",
-                 sep=";")
-df = df[["Date", "Name / Description", "Amount (EUR)", "Transaction type", "Notifications"]]
+from config import PROJECT_FOLDER, OUTPUT_FOLDER
+from main.load import ing_loader
+from transformers import pipeline
 
-# Rename
-df = df.rename(columns={"Date": "date",
-                        "Name / Description": "description",
-                        "Amount (EUR)": "amount",
-                        "Transaction type": "category",
-                        "Notifications": "extra"})
+# Load and preprocess data
+df = ing_loader(
+    PROJECT_FOLDER / "data" / "NL38INGB0001546874_01-01-2024_18-08-2024.csv"
+)
 
-# Set date format
-df["date"] = pd.to_datetime(df["date"], format="%Y%m%d")
-# To numeric
-df["amount"] = df["amount"].str.replace(",", ".")
-df["amount"] = pd.to_numeric(df["amount"])
+# Set up zero-shot classifier
+zeroshot_classifier = pipeline(
+    "zero-shot-classification",
+    model="MoritzLaurer/deberta-v3-large-zeroshot-v2.0",
+    device=0,
+)
 
-# Get unique transaction categories
-categories = df["category"].unique().tolist()
-print(categories)
+# Read budget categories from categories.txt
+with open(PROJECT_FOLDER / "categories.txt", "r") as f:
+    budget_categories = [line.strip() for line in f.readlines()]
 
-# Split
-plt.pie(df.groupby("category")["amount"].sum(), labels=categories, autopct='%.0f%%')
-plt.show()
+# Set up json file to store transaction classifications
+json_file_path = OUTPUT_FOLDER / "transaction_classifications.json"
 
-# Categorize
-"""
-Online Banking = Moving between my accounts | Manual payments to other accounts
-Batch payment = Retour. Only 1 instance
-Cash machine = Cash withdrawal (ATM)
-Deposit = Cash deposit (ATM)
-Transfer = Rounding feature from savings | Retour
-SEPA direct debit = Automatic debit payments
-Various = ING account payments | Credit card repayment
-Payment terminal = Payments at card machine
-iDEAL = Payments via iDEAL 
+# Initialize an empty dictionary to store classifications
+transaction_classifications = {}
 
-____________________________________________________________________
+# Load existing classifications if the file exists
+if json_file_path.exists():
+    with json_file_path.open("r") as json_file:
+        transaction_classifications = json.load(json_file)
 
-Drop:
-
-- Batch payment
-- Deposit
-- Transfer
-
-Split:
-- Online banking --> Remove if extra contains 'From Oranje spaarrekening'
-
-Keep:
-- Online banking
-- SEPA direct debit
-- Various
-- Payment terminal
-- iDEAL
-- Cash machine
-"""
+# Iterate over each row
 ...
