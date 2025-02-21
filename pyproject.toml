@@ -1,27 +1,11 @@
-[tool.poetry]
-name = "QuickTemplate"
-version = "1.0.0"
-description = "Quickly start a new experiment!"
-authors = ["Michael Verdegaal"]
+[project]
+name = "quicktemplate"
+version = "0.1.0"
+description = "Python quick  start template"
 readme = "README.md"
-packages = [{include = "main"}]
-
-
-[tool.poetry.dependencies]
-python = ">=3.12,<3.13"
-pre-commit = "^3.7.1"
-matplotlib = "^3.9.2"
-seaborn = "^0.13.2"
-transformers = "^4.44.2"
-pandas = "^2.2.2"
-torch = {version = "^2.4.0+cu121", source = "pytorch-gpu-src"}
-
-
-[[tool.poetry.source]]
-name = "pytorch-gpu-src"
-url = "https://download.pytorch.org/whl/cu118"
-priority = "explicit"
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires-python = ">=3.12"
+dependencies = [
+    "matplotlib>=3.10.0",
+    "polars>=1.22.0",
+    "pre-commit>=4.1.0",
+]
