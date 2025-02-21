@@ -1,7 +1,7 @@
 [project]
-name = "quicktemplate"
+name = "QuickTemplate"
 version = "0.1.0"
-description = "Python quick  start template"
+description = "Python quick start template"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
