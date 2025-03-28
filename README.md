@@ -5,12 +5,10 @@ pre-commit config pre-provided.
 
 ## Installation
 
-Installation is done with [Poetry](https://python-poetry.org/) (although pip is
-possible too for fallback purposes).
+Installation is done with [UV]([https://python-poetry.org/](https://docs.astral.sh/uv/))
 
-- run `poetry install`
-- run `pre-commit install`
-- optionally, add more packages using `poetry add <package>`
+- run `uv sync`
+- optionally, add more packages using `uv add <package>`
 
 
 
